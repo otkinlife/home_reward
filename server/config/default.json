@@ -1,0 +1,6 @@
+{
+  "data_path": "./server/data/",
+  "task_file_name": "t_list.json",
+  "character_file_name": "c_list.json",
+  "product_file_name": "p_list.json"
+}
