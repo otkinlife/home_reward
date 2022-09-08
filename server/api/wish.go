@@ -3,26 +3,28 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"home-reward/server/object"
+	"home-reward/server/wish"
 	"net/http"
 	"strconv"
 )
 
-func GetProductList(w http.ResponseWriter, r *http.Request) {
+func GetWishList(w http.ResponseWriter, r *http.Request) {
 	resp := new(Resp)
 	defer func() {
 		setupCORS(&w)
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
-	data := map[int64][]*object.Product{}
-	for _, product := range object.ProductList {
-		data[product.Status] = append(data[product.Status], product)
+	data, err := wish.List()
+	if err != nil {
+		resp.ErrNo = 1
+		resp.Data = fmt.Sprint(err)
+		return
 	}
 	resp.Data = data
 }
 
-func CreateProduct(w http.ResponseWriter, r *http.Request) {
+func CreateWish(w http.ResponseWriter, r *http.Request) {
 	resp := new(Resp)
 	defer func() {
 		setupCORS(&w)
@@ -32,7 +34,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
 	if name == "" {
 		resp.ErrNo = 1
-		resp.Data = fmt.Sprint("物品名不存在！")
+		resp.Data = fmt.Sprint("愿望名不存在！")
 		return
 	}
 	reward := r.URL.Query().Get("reward")
@@ -48,15 +50,15 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	other := r.URL.Query().Get("other")
-	err = object.CreateProduct(name, int64(rewardNumber), other)
+	err = wish.Create(name, int64(rewardNumber), other)
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	resp.Data = "物品发布成功"
+	resp.Data = "愿望发布成功"
 }
 
-func DelProduct(w http.ResponseWriter, r *http.Request) {
+func DelWish(w http.ResponseWriter, r *http.Request) {
 	resp := new(Resp)
 	defer func() {
 		setupCORS(&w)
@@ -66,7 +68,7 @@ func DelProduct(w http.ResponseWriter, r *http.Request) {
 	IDString := r.URL.Query().Get("id")
 	if IDString == "" {
 		resp.ErrNo = 1
-		resp.Data = fmt.Sprint("物品不存在！")
+		resp.Data = fmt.Sprint("愿望不存在！")
 		return
 	}
 	ID, err := strconv.Atoi(IDString)
@@ -75,15 +77,15 @@ func DelProduct(w http.ResponseWriter, r *http.Request) {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = object.DeleteProduct(int64(ID))
+	err = wish.Delete(int64(ID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	resp.Data = "物品删除成功"
+	resp.Data = "愿望删除成功"
 }
 
-func BuyProduct(w http.ResponseWriter, r *http.Request) {
+func FinishWish(w http.ResponseWriter, r *http.Request) {
 	resp := new(Resp)
 	defer func() {
 		setupCORS(&w)
@@ -93,7 +95,7 @@ func BuyProduct(w http.ResponseWriter, r *http.Request) {
 	IDString := r.URL.Query().Get("id")
 	if IDString == "" {
 		resp.ErrNo = 1
-		resp.Data = fmt.Sprint("物品不存在！")
+		resp.Data = fmt.Sprint("愿望不存在！")
 		return
 	}
 	ID, err := strconv.Atoi(IDString)
@@ -103,15 +105,15 @@ func BuyProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = object.BuyProduct(int64(ID))
+	err = wish.Finish(int64(ID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	resp.Data = "物品购买成功"
+	resp.Data = "愿望购买成功"
 }
 
-func CancelBuyProduct(w http.ResponseWriter, r *http.Request) {
+func CancelFinishWish(w http.ResponseWriter, r *http.Request) {
 	resp := new(Resp)
 	defer func() {
 		setupCORS(&w)
@@ -121,7 +123,7 @@ func CancelBuyProduct(w http.ResponseWriter, r *http.Request) {
 	IDString := r.URL.Query().Get("id")
 	if IDString == "" {
 		resp.ErrNo = 1
-		resp.Data = fmt.Sprint("物品不存在！")
+		resp.Data = fmt.Sprint("愿望不存在！")
 		return
 	}
 	ID, err := strconv.Atoi(IDString)
@@ -130,10 +132,10 @@ func CancelBuyProduct(w http.ResponseWriter, r *http.Request) {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = object.CancelBuyProduct(int64(ID))
+	err = wish.Finish(int64(ID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	resp.Data = "物品取消购买成功"
+	resp.Data = "愿望取消完成成功"
 }

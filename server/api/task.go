@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"home-reward/server/object"
+	"home-reward/server/task"
 	"net/http"
 	"strconv"
 )
@@ -15,9 +15,11 @@ func GetTaskList(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
-	data := map[int64][]*object.Task{}
-	for _, task := range object.TaskList {
-		data[task.Status] = append(data[task.Status], task)
+	data, err := task.List()
+	if err != nil {
+		resp.ErrNo = 1
+		resp.Data = fmt.Sprint(err)
+		return
 	}
 	resp.Data = data
 }
@@ -32,7 +34,7 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
 	if name == "" {
 		resp.ErrNo = 1
-		resp.Data = fmt.Sprint("悬赏名不存在！")
+		resp.Data = fmt.Sprint("任务名不存在！")
 		return
 	}
 	reward := r.URL.Query().Get("reward")
@@ -47,12 +49,13 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = object.CreateTask(name, int64(rewardNumber))
+	err = task.Create(name, int64(rewardNumber))
 	if err != nil {
-		resp.Data = "悬赏发布成功，但文件未更新"
+		resp.ErrNo = 1
+		resp.Data = fmt.Sprint(err)
 		return
 	}
-	resp.Data = "悬赏发布成功"
+	resp.Data = "任务发布成功"
 }
 
 func DelTask(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +68,7 @@ func DelTask(w http.ResponseWriter, r *http.Request) {
 	IDString := r.URL.Query().Get("id")
 	if IDString == "" {
 		resp.ErrNo = 1
-		resp.Data = fmt.Sprint("悬赏不存在！")
+		resp.Data = fmt.Sprint("任务不存在！")
 		return
 	}
 	ID, err := strconv.Atoi(IDString)
@@ -74,15 +77,16 @@ func DelTask(w http.ResponseWriter, r *http.Request) {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = object.DeleteTask(int64(ID))
+	err = task.Delete(int64(ID))
 	if err != nil {
-		resp.Data = "悬赏删除成功，但文件未更新"
+		resp.ErrNo = 1
+		resp.Data = fmt.Sprint(err)
 		return
 	}
-	resp.Data = "悬赏删除成功"
+	resp.Data = "任务删除成功"
 }
 
-func DoTask(w http.ResponseWriter, r *http.Request) {
+func GetTask(w http.ResponseWriter, r *http.Request) {
 	resp := new(Resp)
 	defer func() {
 		setupCORS(&w)
@@ -92,7 +96,7 @@ func DoTask(w http.ResponseWriter, r *http.Request) {
 	IDString := r.URL.Query().Get("id")
 	if IDString == "" {
 		resp.ErrNo = 1
-		resp.Data = fmt.Sprint("悬赏不存在！")
+		resp.Data = fmt.Sprint("任务不存在！")
 		return
 	}
 	ID, err := strconv.Atoi(IDString)
@@ -102,15 +106,15 @@ func DoTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = object.DoTask(int64(ID))
+	err = task.Get(int64(ID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	resp.Data = "悬赏领取成功"
+	resp.Data = "任务领取成功"
 }
 
-func UnDoTask(w http.ResponseWriter, r *http.Request) {
+func CancelGetTask(w http.ResponseWriter, r *http.Request) {
 	resp := new(Resp)
 	defer func() {
 		setupCORS(&w)
@@ -120,7 +124,7 @@ func UnDoTask(w http.ResponseWriter, r *http.Request) {
 	TaskIDString := r.URL.Query().Get("id")
 	if TaskIDString == "" {
 		resp.ErrNo = 1
-		resp.Data = fmt.Sprint("悬赏不存在！")
+		resp.Data = fmt.Sprint("任务不存在！")
 		return
 	}
 	TaskID, err := strconv.Atoi(TaskIDString)
@@ -129,15 +133,15 @@ func UnDoTask(w http.ResponseWriter, r *http.Request) {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = object.UnDoTask(int64(TaskID))
+	err = task.CancelGet(int64(TaskID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	resp.Data = "悬赏取消领取成功"
+	resp.Data = "任务取消领取成功"
 }
 
-func DoneTask(w http.ResponseWriter, r *http.Request) {
+func FinishTask(w http.ResponseWriter, r *http.Request) {
 	resp := new(Resp)
 	defer func() {
 		setupCORS(&w)
@@ -147,7 +151,7 @@ func DoneTask(w http.ResponseWriter, r *http.Request) {
 	TaskIDString := r.URL.Query().Get("id")
 	if TaskIDString == "" {
 		resp.ErrNo = 1
-		resp.Data = fmt.Sprint("悬赏不存在！")
+		resp.Data = fmt.Sprint("任务不存在！")
 		return
 	}
 	TaskID, err := strconv.Atoi(TaskIDString)
@@ -156,11 +160,11 @@ func DoneTask(w http.ResponseWriter, r *http.Request) {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = object.DoneTask(int64(TaskID))
+	err = task.Finish(int64(TaskID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
 
-	resp.Data = "悬赏完成"
+	resp.Data = "任务完成"
 }

@@ -1,4 +1,4 @@
-package object
+package config
 
 import "home-reward/server/helper"
 
@@ -9,6 +9,7 @@ type Config struct {
 	TaskFileName      string `json:"task_file_name"`
 	CharacterFileName string `json:"character_file_name"`
 	ProductFileName   string `json:"product_file_name"`
+	MySQLConnectInfo  string `json:"my_sql_connect_info"`
 }
 
 func InitConfig() {

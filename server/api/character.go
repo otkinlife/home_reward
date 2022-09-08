@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"home-reward/server/object"
+	"home-reward/server/character"
 	"net/http"
 	"strconv"
 )
@@ -27,5 +27,11 @@ func GetCharacter(w http.ResponseWriter, r *http.Request) {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	resp.Data = object.Characters[int64(ID)]
+	data, err := character.One(int64(ID))
+	if err != nil {
+		resp.ErrNo = 1
+		resp.Data = fmt.Sprint(err)
+		return
+	}
+	resp.Data = data
 }
