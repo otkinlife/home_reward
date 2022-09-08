@@ -15,7 +15,14 @@ func GetTaskList(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
-	data, err := task.List()
+	ip := getClientIP(r)
+	logic := task.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
+	data, err := logic.List()
 	if err != nil {
 		resp.ErrNo = 1
 		resp.Data = fmt.Sprint(err)
@@ -31,6 +38,13 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
+	ip := getClientIP(r)
+	logic := task.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
 	name := r.URL.Query().Get("name")
 	if name == "" {
 		resp.ErrNo = 1
@@ -49,7 +63,7 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = task.Create(name, int64(rewardNumber))
+	err = logic.Create(name, int64(rewardNumber))
 	if err != nil {
 		resp.ErrNo = 1
 		resp.Data = fmt.Sprint(err)
@@ -65,6 +79,13 @@ func DelTask(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
+	ip := getClientIP(r)
+	logic := task.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
 	IDString := r.URL.Query().Get("id")
 	if IDString == "" {
 		resp.ErrNo = 1
@@ -77,7 +98,7 @@ func DelTask(w http.ResponseWriter, r *http.Request) {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = task.Delete(int64(ID))
+	err = logic.Delete(int64(ID))
 	if err != nil {
 		resp.ErrNo = 1
 		resp.Data = fmt.Sprint(err)
@@ -93,6 +114,13 @@ func GetTask(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
+	ip := getClientIP(r)
+	logic := task.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
 	IDString := r.URL.Query().Get("id")
 	if IDString == "" {
 		resp.ErrNo = 1
@@ -106,7 +134,7 @@ func GetTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = task.Get(int64(ID))
+	err = logic.Get(int64(ID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
@@ -121,19 +149,26 @@ func CancelGetTask(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
-	TaskIDString := r.URL.Query().Get("id")
-	if TaskIDString == "" {
+	ip := getClientIP(r)
+	logic := task.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
+	IDString := r.URL.Query().Get("id")
+	if IDString == "" {
 		resp.ErrNo = 1
 		resp.Data = fmt.Sprint("任务不存在！")
 		return
 	}
-	TaskID, err := strconv.Atoi(TaskIDString)
+	ID, err := strconv.Atoi(IDString)
 	if err != nil {
 		resp.ErrNo = 1
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = task.CancelGet(int64(TaskID))
+	err = logic.CancelGet(int64(ID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
@@ -148,23 +183,65 @@ func FinishTask(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
-	TaskIDString := r.URL.Query().Get("id")
-	if TaskIDString == "" {
+	ip := getClientIP(r)
+	logic := task.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
+	IDString := r.URL.Query().Get("id")
+	if IDString == "" {
 		resp.ErrNo = 1
 		resp.Data = fmt.Sprint("任务不存在！")
 		return
 	}
-	TaskID, err := strconv.Atoi(TaskIDString)
+	ID, err := strconv.Atoi(IDString)
 	if err != nil {
 		resp.ErrNo = 1
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = task.Finish(int64(TaskID))
+	err = logic.Finish(int64(ID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
 
 	resp.Data = "任务完成"
+}
+
+func CancelFinishTask(w http.ResponseWriter, r *http.Request) {
+	resp := new(Resp)
+	defer func() {
+		setupCORS(&w)
+		resString, _ := json.Marshal(resp)
+		_, _ = w.Write(resString)
+	}()
+	ip := getClientIP(r)
+	logic := task.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
+	IDString := r.URL.Query().Get("id")
+	if IDString == "" {
+		resp.ErrNo = 1
+		resp.Data = fmt.Sprint("任务不存在！")
+		return
+	}
+	ID, err := strconv.Atoi(IDString)
+	if err != nil {
+		resp.ErrNo = 1
+		resp.Data = fmt.Sprint(err)
+		return
+	}
+	err = logic.CancelFinish(int64(ID))
+	if err != nil {
+		resp.Data = fmt.Sprint(err)
+		return
+	}
+
+	resp.Data = "任务取消完成"
 }

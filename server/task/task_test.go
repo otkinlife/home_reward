@@ -7,10 +7,14 @@ import (
 	"testing"
 )
 
+var logic *Logic
+
 func TestTask(t *testing.T) {
 	config.InitConfig()
 	base.InitMySQL()
 
+	logic = NewLogic("1.1.1.1")
+	fmt.Println(logic.CurrentCharacter)
 	create(t)
 	list := list(t)
 	if len(list) == 0 {
@@ -30,7 +34,7 @@ func TestTask(t *testing.T) {
 
 func create(t *testing.T) {
 	fmt.Println("test create...")
-	err := Create("拖地", 100)
+	err := logic.Create("拖地", 100)
 	if err != nil {
 		t.Error(err)
 		t.Failed()
@@ -40,7 +44,7 @@ func create(t *testing.T) {
 
 func list(t *testing.T) map[int64]Task {
 	fmt.Println("test list...")
-	list, err := List()
+	list, err := logic.List()
 	if err != nil {
 		t.Error(err)
 		t.Failed()
@@ -52,7 +56,7 @@ func list(t *testing.T) map[int64]Task {
 
 func get(t *testing.T, id int64) {
 	fmt.Println("test get ...")
-	err := Get(id)
+	err := logic.Get(id)
 	if err != nil {
 		t.Error(err)
 		t.Failed()
@@ -62,7 +66,7 @@ func get(t *testing.T, id int64) {
 
 func cancelGet(t *testing.T, id int64) {
 	fmt.Println("test cancel get ...")
-	err := CancelGet(id)
+	err := logic.CancelGet(id)
 	if err != nil {
 		t.Error(err)
 		t.Failed()
@@ -72,7 +76,7 @@ func cancelGet(t *testing.T, id int64) {
 
 func finish(t *testing.T, id int64) {
 	fmt.Println("test finish ...")
-	err := Finish(id)
+	err := logic.Finish(id)
 	if err != nil {
 		t.Error(err)
 		t.Failed()
@@ -82,7 +86,7 @@ func finish(t *testing.T, id int64) {
 
 func cancelFinish(t *testing.T, id int64) {
 	fmt.Println("test cancel finish ...")
-	err := CancelFinish(id)
+	err := logic.CancelFinish(id)
 	if err != nil {
 		t.Error(err)
 		t.Failed()
@@ -92,7 +96,7 @@ func cancelFinish(t *testing.T, id int64) {
 
 func del(t *testing.T, id int64) {
 	fmt.Println("test del ...")
-	err := Delete(id)
+	err := logic.Delete(id)
 	if err != nil {
 		t.Error(err)
 		t.Failed()

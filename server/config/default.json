@@ -3,5 +3,5 @@
   "task_file_name": "t_list.json",
   "character_file_name": "c_list.json",
   "product_file_name": "p_list.json",
-  "my_sql_connect_info": "root:123456@tcp(localhost:3306)/home_data"
+  "my_sql_connect_info": "root:123456@tcp(192.168.31.229:3306)/home_data"
 }

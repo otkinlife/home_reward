@@ -7,10 +7,14 @@ import (
 	"testing"
 )
 
+var logic *Logic
+
 func TestCharacter(t *testing.T) {
 	config.InitConfig()
 	base.InitMySQL()
-	create(t)
+	logic = NewLogic("1.1.1.1")
+	fmt.Println(logic.CurrentCharacter)
+	//create(t)
 	list := list(t)
 	if len(list) == 0 {
 		return
@@ -26,7 +30,7 @@ func TestCharacter(t *testing.T) {
 
 func create(t *testing.T) {
 	fmt.Println("test create...")
-	err := Create("贾凯超", "")
+	err := logic.Create("狗蛋", "")
 	if err != nil {
 		t.Error(err)
 		t.Failed()
@@ -36,7 +40,7 @@ func create(t *testing.T) {
 
 func list(t *testing.T) map[int64]Character {
 	fmt.Println("test list...")
-	data, err := List()
+	data, err := logic.List()
 	if err != nil {
 		t.Error(err)
 		t.Fail()
@@ -48,7 +52,7 @@ func list(t *testing.T) map[int64]Character {
 
 func add(t *testing.T, c Character) {
 	fmt.Println("test add...")
-	err := AddReward(c, 100)
+	err := logic.AddReward(c, 100)
 	if err != nil {
 		t.Error(err)
 		t.Fail()
@@ -58,7 +62,7 @@ func add(t *testing.T, c Character) {
 
 func reduce(t *testing.T, c Character) {
 	fmt.Println("test add...")
-	err := ReduceReward(c, 10)
+	err := logic.ReduceReward(c, 10)
 	if err != nil {
 		t.Error(err)
 		t.Fail()

@@ -1,14 +1,35 @@
 package character
 
-func Current() *Character {
-	c, err := One(1)
+type Logic struct {
+	IP               string
+	CurrentCharacter *Character
+}
+
+func NewLogic(ip string) *Logic {
+	return &Logic{
+		IP:               ip,
+		CurrentCharacter: Current(ip),
+	}
+}
+
+func Current(ip string) *Character {
+	c := Character{}
+	err := getCharacterByIp(ip, &c)
 	if err != nil {
 		return nil
 	}
 	return &c
 }
 
-func List() (map[int64]Character, error) {
+func Bind(ip string, id int64) error {
+	return bind(ip, id)
+}
+
+func UnBind(ip string, id int64) error {
+	return unbind(ip, id)
+}
+
+func (l *Logic) List() (map[int64]Character, error) {
 	characters := map[int64]Character{}
 	err := getCharacters(&characters)
 	if err != nil {
@@ -17,7 +38,7 @@ func List() (map[int64]Character, error) {
 	return characters, nil
 }
 
-func One(ID int64) (Character, error) {
+func (l *Logic) One(ID int64) (Character, error) {
 	character := Character{}
 	err := getCharacterByID(ID, &character)
 	if err != nil {
@@ -26,7 +47,7 @@ func One(ID int64) (Character, error) {
 	return character, nil
 }
 
-func Create(nick string, avatar string) error {
+func (l *Logic) Create(nick string, avatar string) error {
 	c := Character{
 		Nick:   nick,
 		Reward: 0,
@@ -35,15 +56,15 @@ func Create(nick string, avatar string) error {
 	return save(c)
 }
 
-func AddReward(character Character, reward int64) error {
+func (l *Logic) AddReward(character *Character, reward int64) error {
 	character.AddReward(reward)
-	return save(character)
+	return save(*character)
 }
 
-func ReduceReward(character Character, reward int64) error {
+func (l *Logic) ReduceReward(character *Character, reward int64) error {
 	err := character.Reduce(reward)
 	if err != nil {
 		return err
 	}
-	return save(character)
+	return save(*character)
 }

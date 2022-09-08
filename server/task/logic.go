@@ -5,7 +5,19 @@ import (
 	"home-reward/server/character"
 )
 
-func List() (map[int64]Task, error) {
+type Logic struct {
+	IP               string
+	CurrentCharacter *character.Character
+}
+
+func NewLogic(ip string) *Logic {
+	return &Logic{
+		IP:               ip,
+		CurrentCharacter: character.Current(ip),
+	}
+}
+
+func (l *Logic) List() (map[int64]Task, error) {
 	tasks := map[int64]Task{}
 	err := getTasks(&tasks)
 	if err != nil {
@@ -14,7 +26,7 @@ func List() (map[int64]Task, error) {
 	return tasks, nil
 }
 
-func One(ID int64) (Task, error) {
+func (l *Logic) One(ID int64) (Task, error) {
 	task := Task{}
 	err := getTaskByID(ID, &task)
 	if err != nil {
@@ -23,7 +35,7 @@ func One(ID int64) (Task, error) {
 	return task, nil
 }
 
-func Create(name string, reward int64) error {
+func (l *Logic) Create(name string, reward int64) error {
 	t := Task{
 		Name:        name,
 		Reward:      reward,
@@ -33,16 +45,16 @@ func Create(name string, reward int64) error {
 	return save(t)
 }
 
-func Delete(ID int64) error {
-	t, err := One(ID)
+func (l *Logic) Delete(ID int64) error {
+	t, err := l.One(ID)
 	if err != nil {
 		return err
 	}
 	return delete(t)
 }
 
-func Get(ID int64) error {
-	t, err := One(ID)
+func (l *Logic) Get(ID int64) error {
+	t, err := l.One(ID)
 	if err != nil {
 		return err
 	}
@@ -51,18 +63,18 @@ func Get(ID int64) error {
 	}
 	if t.Status == StatusToDo {
 		t.Status = StatusDoing
-		t.CharacterID = character.Current().ID
+		t.CharacterID = l.CurrentCharacter.ID
 		return save(t)
 	}
 	return nil
 }
 
-func CancelGet(ID int64) error {
-	t, err := One(ID)
+func (l *Logic) CancelGet(ID int64) error {
+	t, err := l.One(ID)
 	if err != nil {
 		return err
 	}
-	if t.CharacterID != character.Current().ID {
+	if t.CharacterID != l.CurrentCharacter.ID {
 		return errors.New("不是自己的任务不能取消")
 	}
 	if t.Status == StatusDoing {
@@ -73,20 +85,21 @@ func CancelGet(ID int64) error {
 	return nil
 }
 
-func Finish(ID int64) error {
-	t, err := One(ID)
+func (l *Logic) Finish(ID int64) error {
+	t, err := l.One(ID)
 	if err != nil {
 		return err
 	}
-	if t.CharacterID != character.Current().ID {
+	if t.CharacterID != l.CurrentCharacter.ID {
 		return errors.New("不是自己的任务不能取消")
 	}
-	if t.CharacterID != character.Current().ID {
+	if t.CharacterID != l.CurrentCharacter.ID {
 		return errors.New("不是自己的任务不能完成")
 	}
 	if t.Status == StatusDoing {
 		t.Status = StatusDone
-		err = character.AddReward(*character.Current(), t.Reward)
+		characterLogic := character.NewLogic(l.IP)
+		err = characterLogic.AddReward(l.CurrentCharacter, t.Reward)
 		if err != nil {
 			return err
 		}
@@ -95,17 +108,18 @@ func Finish(ID int64) error {
 	return nil
 }
 
-func CancelFinish(ID int64) error {
-	t, err := One(ID)
+func (l *Logic) CancelFinish(ID int64) error {
+	t, err := l.One(ID)
 	if err != nil {
 		return err
 	}
-	if t.CharacterID != character.Current().ID {
+	if t.CharacterID != l.CurrentCharacter.ID {
 		return errors.New("不是自己的任务不能取消")
 	}
 	if t.Status == StatusDone {
 		t.Status = StatusDoing
-		err = character.ReduceReward(*character.Current(), t.Reward)
+		characterLogic := character.NewLogic(l.IP)
+		err = characterLogic.ReduceReward(l.CurrentCharacter, t.Reward)
 		if err != nil {
 			return err
 		}

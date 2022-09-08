@@ -15,7 +15,16 @@ func GetWishList(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
-	data, err := wish.List()
+
+	ip := getClientIP(r)
+	logic := wish.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
+
+	data, err := logic.List()
 	if err != nil {
 		resp.ErrNo = 1
 		resp.Data = fmt.Sprint(err)
@@ -31,6 +40,15 @@ func CreateWish(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
+
+	ip := getClientIP(r)
+	logic := wish.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
+
 	name := r.URL.Query().Get("name")
 	if name == "" {
 		resp.ErrNo = 1
@@ -50,7 +68,7 @@ func CreateWish(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	other := r.URL.Query().Get("other")
-	err = wish.Create(name, int64(rewardNumber), other)
+	err = logic.Create(name, int64(rewardNumber), other)
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
@@ -65,6 +83,15 @@ func DelWish(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
+
+	ip := getClientIP(r)
+	logic := wish.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
+
 	IDString := r.URL.Query().Get("id")
 	if IDString == "" {
 		resp.ErrNo = 1
@@ -77,7 +104,7 @@ func DelWish(w http.ResponseWriter, r *http.Request) {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = wish.Delete(int64(ID))
+	err = logic.Delete(int64(ID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
@@ -92,6 +119,15 @@ func FinishWish(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
+
+	ip := getClientIP(r)
+	logic := wish.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
+
 	IDString := r.URL.Query().Get("id")
 	if IDString == "" {
 		resp.ErrNo = 1
@@ -105,7 +141,7 @@ func FinishWish(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = wish.Finish(int64(ID))
+	err = logic.Finish(int64(ID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
@@ -120,6 +156,15 @@ func CancelFinishWish(w http.ResponseWriter, r *http.Request) {
 		resString, _ := json.Marshal(resp)
 		_, _ = w.Write(resString)
 	}()
+
+	ip := getClientIP(r)
+	logic := wish.NewLogic(ip)
+	if logic.CurrentCharacter == nil {
+		resp.ErrNo = 2
+		resp.Data = "该设备还未绑定角色"
+		return
+	}
+
 	IDString := r.URL.Query().Get("id")
 	if IDString == "" {
 		resp.ErrNo = 1
@@ -132,7 +177,7 @@ func CancelFinishWish(w http.ResponseWriter, r *http.Request) {
 		resp.Data = fmt.Sprint(err)
 		return
 	}
-	err = wish.Finish(int64(ID))
+	err = logic.Finish(int64(ID))
 	if err != nil {
 		resp.Data = fmt.Sprint(err)
 		return
