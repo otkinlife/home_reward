@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="KcJia">
+    <meta name="generator" content="KcJia">
+    <title>家庭悬赏榜</title>
+    <link href="static/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/default.css" rel="stylesheet">
+    <script src="static/js/include.js"></script>
+</head>
+<body class="bg-custom">
+<div id="loadingModal" class="loading_bg">
+    <div class="loading">
+        <img style="width: 10em; height: 10em;" src="static/imgs/loading2.gif">
+    </div>
+</div>
+
+<div>
+    <img src="static/imgs/default.png" class="bg-card mt-5">
+</div>
+<header class="py-2 mx-auto text-center" style="background-color: #66CAE3">
+    <div>
+        <img style="width: 2em;height: 2em" src="static/imgs/mla.png">
+        <span style="color: #ffffff;">任务列表</span>
+    </div>
+</header>
+<div class="container-fluid main_container py-2">
+    <main>
+        <div class="row p-2 mt-2">
+            <span class="ms-3" style="float: left; width:auto"><img class="circleImg" src="static/imgs/bike.jpg"></span>
+            <ul class="list-unstyled mt-3 mb-3" style="float: left; width:auto">
+                <li style="color: white; font-size: 0.8em; margin-bottom: 0.5em">最新愿望</li>
+                <li style="color: white"><h5>买一辆自行车</h5></li>
+            </ul>
+        </div>
+        <div class="card m-2 rounded-10 shadow-sm">
+            <div class="card-body">
+                <div id="all-card" class="container px-2">
+                    <div class="row gx-3">
+                        <div class="col">
+                            <div class="p-2">待实现愿望<br><span>5</span></div>
+                        </div>
+                        <div class="col">
+                            <div class="p-2">所需金币<br><span>59</span></div>
+                        </div>
+                        <div class="col">
+                            <div class="p-2">我的金币<br><span>20</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card m-2 rounded-10 shadow-sm">
+            <div class="card-body">
+                <div class="task-list-flag rounded-pill float-start me-2"></div>
+                <div class="card-title pricing-card-title">今日待完成</div>
+                <hr>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    <label class="form-check-label ms-1 w-100 pe-1" for="flexCheckDefault">
+                        <span class="float-start">看书30分钟</span>
+                        <span class="float-end task-list-font">1金币</span>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                    <label class="form-check-label ms-1 w-100 pe-1" for="flexCheckChecked">
+                        <span class="float-start">喝8杯水</span>
+                        <span class="float-end task-list-font">2金币</span>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                    <label class="form-check-label ms-1 w-100 pe-1" for="flexCheckChecked">
+                        <span class="float-start">7:00起床</span>
+                        <span class="float-end task-list-font">2金币</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<include src="./footer.html"></include>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        setTimeout(function () {
+            $('#loadingModal').hide()
+        }, 1000)
+    })
+</script>

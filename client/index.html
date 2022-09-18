@@ -9,14 +9,27 @@
     <title>家庭悬赏榜</title>
     <link href="static/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/default.css" rel="stylesheet">
+    <script src="static/js/include.js"></script>
 </head>
 <body class="bg-custom">
-<div>
-    <img src="static/imgs/default.png" class="bg-card">
+<div id="loadingModal" class="loading_bg">
+    <div class="loading">
+        <img style="width: 10em; height: 10em;" src="static/imgs/loading2.gif">
+    </div>
 </div>
+
+<div>
+    <img src="static/imgs/default.png" class="bg-card mt-5">
+</div>
+<header class="py-2 mx-auto text-center" style="background-color: #66CAE3">
+    <div>
+        <img style="width: 2em;height: 2em" src="static/imgs/mla.png">
+        <span style="color: #ffffff;">金银岛</span>
+    </div>
+</header>
 <div class="container-fluid main_container py-2">
     <main>
-        <div class="row p-2">
+        <div class="row p-2 mt-2">
             <span class="ms-3" style="float: left; width:auto"><img class="circleImg" src="static/imgs/bike.jpg"></span>
             <ul class="list-unstyled mt-3 mb-3" style="float: left; width:auto">
                 <li style="color: white; font-size: 0.8em; margin-bottom: 0.5em">最新愿望</li>
@@ -69,43 +82,15 @@
             </div>
         </div>
     </main>
-
-    <footer class="pt-1 border-top fixed-bottom">
-        <nav>
-            <ul class="nav justify-content-center">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page">
-                        <label><img src="static/imgs/index1.png"/></label><br>首页
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link">
-                        <label><img src="static/imgs/wish1.png"/></label><br>愿望
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" >
-                        <label><img src="static/imgs/g.png"/></label><br>目标
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link">
-                        <label><img src="static/imgs/task1.png"/></label><br>任务
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link">
-                        <label><img src="static/imgs/mla.png"/></label><br>我的
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </footer>
 </div>
-
-
-
-
-
+<include src="./footer.html"> </include>
 </body>
 </html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        setTimeout(function () {
+            $('#loadingModal').hide()
+        }, 1000)
+    })
+</script>
