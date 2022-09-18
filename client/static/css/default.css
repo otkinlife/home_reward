@@ -1,0 +1,54 @@
+hr {
+    margin-top: 0.1em;
+}
+.bg-custom{
+    --bs-bg-opacity:1;
+    background-color:#f6f6f6
+}
+.bg-card {
+    position:absolute;
+    z-index: -1;
+    height: auto;
+    width: 100%;
+}
+.circleImg {
+    height: 5em;
+    width: 5em;
+    border: 5px solid white;
+    border-radius: 50%;
+}
+
+.rounded-10 {
+    border-radius: 1rem!important;
+}
+
+#all-card{
+    font-size: 0.8rem
+}
+
+#all-card span {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.task-list-flag {
+    width: 0.5rem;
+    height: 1rem;
+    background-color: #95db25;
+}
+
+.task-list-font {
+    color: #b1b1b1;
+}
+
+.nav-item img {
+    height: 2em;
+    width: 2em;
+}
+
+.nav-item a {
+    font-size: 0.9em;
+    color: #b1b1b1;
+    padding: 0.5rem 1.5rem;
+}
+

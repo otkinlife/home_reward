@@ -32,7 +32,7 @@ func main() {
 	mux.HandleFunc("/bind", api.BindCharacterWithIP)
 	mux.HandleFunc("/unbind", api.UnBindCharacterWithIP)
 
-	mux.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("../client"))))
+	mux.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("client"))))
 	fmt.Println("server start at port 8999")
 	err := http.ListenAndServe(":8999", mux)
 	if err != nil {
