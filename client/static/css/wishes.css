@@ -1,0 +1,75 @@
+.wishes_head {
+    width: 5rem;
+    height: 2rem;
+    border-radius: 0px;
+    font-size: 1.5rem;
+    font-weight: normal;
+    text-align: LEFT;
+    color: #333333;
+    float: left;
+}
+
+.head_card {
+    width: 100%;
+    height: 8rem;
+    background-color: white;
+}
+
+.head_card_icon {
+    width: 5rem;
+    height: 0.8rem;
+    background: #61a268;
+    border-radius: 0.1rem;
+    margin-top: -0.8rem;
+    margin-left: -0.2rem;
+}
+
+.finished_wishes_button {
+    float: left;
+    width: auto;
+    font-size: 10px;
+    font-weight: normal;
+    text-align: LEFT;
+    color: #5cb1e0;
+    line-height: 17px;
+    margin-top: 17px;
+    margin-left: 1rem;
+}
+
+.search {
+    width: 345px;
+    height: 40px;
+    background: #f6f6f6;
+    border-radius: 0.5rem;
+}
+
+.button {
+    width: 5rem;
+    height: 2rem;
+    background: #66CAE3;
+    border-radius: 1rem;
+    color: #fcf9f9;
+    line-height: 2rem;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+input::-webkit-input-placeholder{
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.wishes_circleImg {
+    height: 5em;
+    width: 5em;
+    border: 5px solid #97edff;
+    border-radius: 50%;
+}
+
+.wish_card_right {
+    color: #6c757d;
+    float: right;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1rem;
+}

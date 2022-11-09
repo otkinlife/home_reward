@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="KcJia">
+    <meta name="generator" content="KcJia">
+    <title>愿望池</title>
+    <link href="static/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/default.css" rel="stylesheet">
+    <link href="static/css/wishes.css" rel="stylesheet">
+    <script src="static/js/include.js"></script>
+</head>
+<body class="bg-custom">
+<div id="loadingModal" class="loading_bg">
+    <div class="loading">
+        <img style="width: 10em; height: 10em;" src="static/imgs/loading2.gif">
+    </div>
+</div>
+<include src="./header.html"></include>
+<div class="head_card card shadow-sm px-4 pt-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-9">
+                <div class="wishes_head">愿望池<div class="head_card_icon"></div></div>
+                <div class="finished_wishes_button">已达成愿望></div>
+            </div>
+            <div class="col-3">
+                <div class="button">+创建愿望</div>
+            </div>
+        </div>
+        <div class="row">
+            <input class="col search mt-3 form-control" placeholder="请输入您要查找的关键词" />
+        </div>
+    </div>
+</div>
+<div class="card m-2 rounded-10 shadow-sm">
+    <div class="card-body">
+        <div class="container px-2">
+            <h5 class="card-title">买一辆自行车<span class="wish_card_right">></span></h5>
+            <hr>
+            <div class="row gx-3">
+                <div class="col-4">
+                    <img class="wishes_circleImg" src="static/imgs/bike.jpg">
+                </div>
+                <div class="col-8 fs-6">
+                    <div class="card-subtitle mb-2 text-muted"><span class="fw-bold">实现时间:</span><a>2022-02-02</a></div>
+                    <div class="card-subtitle mb-2 text-muted"><span class="fw-bold">渴望程度:</span><a>极高</a></div>
+                    <div class="card-subtitle mb-2 text-muted"><spanz class="fw-bold">所需金币:</spanz><a>60</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card m-2 rounded-10 shadow-sm">
+    <div class="card-body">
+        <div class="container px-2">
+            <h5 class="card-title">买一辆自行车<span class="wish_card_right">></span></h5>
+            <hr>
+            <div class="row gx-3">
+                <div class="col-4">
+                    <img class="wishes_circleImg" src="static/imgs/bike.jpg">
+                </div>
+                <div class="col-8 fs-6">
+                    <div class="card-subtitle mb-2 text-muted"><span class="fw-bold">实现时间:</span><a>2022-02-02</a></div>
+                    <div class="card-subtitle mb-2 text-muted"><span class="fw-bold">渴望程度:</span><a>极高</a></div>
+                    <div class="card-subtitle mb-2 text-muted"><spanz class="fw-bold">所需金币:</spanz><a>60</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<include src="./footer.html"></include>
+</body>
+</html>
+<script src="static/js/jq.js"></script>
+<script>
+    $(function () {
+        setTimeout(function () {
+            $('#loadingModal').hide()
+        }, 1000)
+    })
+</script>
